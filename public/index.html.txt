@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MythicMobs Generator - AI Powered</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔮 MythicMobs AI Generator</h1>
+            <p class="subtitle">Powered by Claude Sonnet 4.x</p>
+        </header>
+
+        <main>
+            <!-- Category Selection -->
+            <section class="section">
+                <h2>📋 Kategori Mob</h2>
+                <div class="category-grid">
+                    <label class="category-card">
+                        <input type="radio" name="category" value="boss" checked>
+                        <div class="card-content">
+                            <span class="icon">👑</span>
+                            <span class="label">Boss</span>
+                        </div>
+                    </label>
+                    <label class="category-card">
+                        <input type="radio" name="category" value="boss_dungeon">
+                        <div class="card-content">
+                            <span class="icon">🏰</span>
+                            <span class="label">Boss + Dungeon Mobs</span>
+                        </div>
+                    </label>
+                    <label class="category-card">
+                        <input type="radio" name="category" value="miniboss">
+                        <div class="card-content">
+                            <span class="icon">⚔️</span>
+                            <span class="label">Mini Boss</span>
+                        </div>
+                    </label>
+                    <label class="category-card">
+                        <input type="radio" name="category" value="regular">
+                        <div class="card-content">
+                            <span class="icon">🐺</span>
+                            <span class="label">Mobs Biasa</span>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Prompt Input -->
+            <section class="section">
+                <h2>✨ Deskripsi Mob</h2>
+                <div class="input-group">
+                    <label for="mobPrompt">Deskripsikan mob yang ingin dibuat:</label>
+                    <textarea 
+                        id="mobPrompt" 
+                        placeholder="Contoh: Buat boss bernama 'Fire Dragon King' dengan skill fireball barrage, flame breath, dan wing attack. Model menggunakan ender dragon dengan efek api."
+                        rows="4"
+                    ></textarea>
+                    <small>💡 Tips: Sebutkan nama, tema, skill yang diinginkan, dan model vanilla yang ingin digunakan</small>
+                </div>
+            </section>
+
+            <!-- Reference Selection -->
+            <section class="section">
+                <h2>📚 Referensi (Opsional)</h2>
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="useReference">
+                        Gunakan referensi karakter dari anime/game
+                    </label>
+                    <input 
+                        type="text" 
+                        id="referenceInput" 
+                        placeholder="Contoh: Saitama dari One Punch Man, Minecraft Warden"
+                        disabled
+                    >
+                </div>
+            </section>
+
+            <!-- LibsDisguises Integration -->
+            <section class="section">
+                <h2>🎭 LibsDisguises</h2>
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="useLibsDisguises" checked>
+                        Gunakan LibsDisguises untuk custom model
+                    </label>
+                    <small>Akan menggunakan disguise untuk mempercantik tampilan mob</small>
+                </div>
+            </section>
+
+            <!-- Advanced Options -->
+            <section class="section">
+                <h2>⚙️ Opsi Lanjutan</h2>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="includeItems">
+                        Include Custom Items
+                    </label>
+                    <label>
+                        <input type="checkbox" id="includeDrops">
+                        Include Drop Tables
+                    </label>
+                    <label>
+                        <input type="checkbox" id="advancedSkills" checked>
+                        Gunakan Skill Template Advanced
+                    </label>
+                </div>
+            </section>
+
+            <!-- Generate Button -->
+            <div class="action-section">
+                <button id="generateBtn" class="generate-btn">
+                    <span class="btn-text">🚀 Generate MythicMobs</span>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <p>Generating your awesome mob... ✨</p>
+                <small>This may take 30-60 seconds</small>
+            </div>
+
+            <!-- Error Display -->
+            <div id="errorDisplay" class="error-display" style="display: none;">
+                <h3>❌ Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+
+            <!-- Result Display -->
+            <div id="resultSection" style="display: none;">
+                <section class="section result-section">
+                    <h2>📜 Generated Configuration</h2>
+                    
+                    <!-- Tabs -->
+                    <div class="tabs">
+                        <button class="tab active" data-tab="mobs">Mobs</button>
+                        <button class="tab" data-tab="skills">Skills</button>
+                        <button class="tab" data-tab="items" style="display: none;">Items</button>
+                        <button class="tab" data-tab="drops" style="display: none;">Drops</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div class="tab-content active" id="mobsContent">
+                        <div class="code-header">
+                            <span>📄 Mobs Configuration</span>
+                            <button class="copy-btn" data-target="mobsCode">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <pre><code id="mobsCode"></code></pre>
+                    </div>
+
+                    <div class="tab-content" id="skillsContent">
+                        <div class="code-header">
+                            <span>⚡ Skills Configuration</span>
+                            <button class="copy-btn" data-target="skillsCode">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <pre><code id="skillsCode"></code></pre>
+                    </div>
+
+                    <div class="tab-content" id="itemsContent">
+                        <div class="code-header">
+                            <span>🗡️ Items Configuration</span>
+                            <button class="copy-btn" data-target="itemsCode">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <pre><code id="itemsCode"></code></pre>
+                    </div>
+
+                    <div class="tab-content" id="dropsContent">
+                        <div class="code-header">
+                            <span>💎 Drops Configuration</span>
+                            <button class="copy-btn" data-target="dropsCode">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <pre><code id="dropsCode"></code></pre>
+                    </div>
+
+                    <!-- Download Section -->
+                    <div class="download-section">
+                        <h3>📥 Download Files</h3>
+                        <div class="download-buttons">
+                            <button class="download-btn" id="downloadMobs">
+                                Download Mobs.yml
+                            </button>
+                            <button class="download-btn" id="downloadSkills">
+                                Download Skills.yml
+                            </button>
+                            <button class="download-btn" id="downloadItems" style="display: none;">
+                                Download Items.yml
+                            </button>
+                            <button class="download-btn" id="downloadDrops" style="display: none;">
+                                Download Drops.yml
+                            </button>
+                            <button class="download-btn primary" id="downloadAll">
+                                📦 Download All (ZIP)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>Made with ❤️ for MythicMobs Community</p>
+            <p><small>Powered by Claude AI - No API Key Required in Frontend</small></p>
+        </footer>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/ui-handler.js"></script>
+    <script src="/js/generator.js"></script>
+</body>
+</html>
