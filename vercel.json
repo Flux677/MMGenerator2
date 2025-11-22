@@ -22,11 +22,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/generate.js": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
   }
 }
